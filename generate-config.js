@@ -1,6 +1,20 @@
 const fs = require('fs');
 
-const cookie = (process.env.HOYOLAB_COOKIE || '').trim();
+let cookie = (process.env.HOYOLAB_COOKIE || '').trim();
+if (cookie) {
+  const ltuidMatch = cookie.match(/ltuid_v2=([^;]+)/);
+  if (ltuidMatch && !cookie.includes('ltuid=')) {
+    cookie += ` ltuid=${ltuidMatch[1]};`;
+  }
+  const accountIdMatch = cookie.match(/account_id_v2=([^;]+)/);
+  if (accountIdMatch && !cookie.includes('account_id=')) {
+    cookie += ` account_id=${accountIdMatch[1]};`;
+  }
+  const ltokenMatch = cookie.match(/ltoken_v2=([^;]+)/);
+  if (ltokenMatch && !cookie.includes('ltoken=')) {
+    cookie += ` ltoken=${ltokenMatch[1]};`;
+  }
+}
 const discordWebhook = process.env.DISCORD_WEBHOOK || '';
 const telegramToken = process.env.TELEGRAM_TOKEN || '';
 const telegramChatId = process.env.TELEGRAM_CHAT_ID || '';

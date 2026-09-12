@@ -61,11 +61,13 @@ const config = require("./config.js");
 	};
 
 	app.Logger.info("Client", "Logging in to accounts...");
-	const hoyoPromises = [];
 	for (const account of accounts) {
-		hoyoPromises.push(account.login());
+		try {
+			await account.login();
+		} catch (err) {
+			app.Logger.warn("Client", `Skipping ${account.name} account login: ${err.message || err}`);
+		}
 	}
-	await Promise.all(hoyoPromises);
 
 	const platformsConfig = config.platforms || [];
 	const platforms = new Set();
