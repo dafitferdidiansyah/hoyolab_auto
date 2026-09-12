@@ -13,9 +13,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          repository: 'torikushiii/hoyolab-auto'
-          ref: 'main'
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -26,17 +23,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Create environment configuration
-        run: |
-          cat << 'EOF' > .env
-          COOKIE="${{ secrets.HOYOLAB_COOKIE }}"
-          DISCORD_WEBHOOK_URL="${{ secrets.DISCORD_WEBHOOK }}"
-          AUTO_DAILY_CHECKIN=true
-          AUTO_REDEEM_CODE=true
-          AUTO_HOWL_CARD=true
-          AUTO_MIMO=true
-          LANGUAGE=en-us
-          EOF
+      - name: Create Configuration
+        env:
+          HOYOLAB_COOKIE: ${{ secrets.HOYOLAB_COOKIE }}
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: node generate-config.js
 
       - name: Run HoyoLab Auto Execution
-        run: npm start
+        run: node run-once.js
