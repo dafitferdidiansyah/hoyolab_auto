@@ -1,0 +1,42 @@
+name: HoyoLab Auto Check-in & Redeem
+
+on:
+  schedule:
+    # Runs daily at 17:00 UTC (00:00 WIB / 01:00 WITA)
+    - cron: '0 17 * * *'
+  workflow_dispatch: # Allows manual trigger anytime from GitHub UI
+
+jobs:
+  hoyolab-auto:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          repository: 'torikushiii/hoyolab-auto'
+          ref: 'main'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create environment configuration
+        run: |
+          cat << 'EOF' > .env
+          COOKIE="${{ secrets.HOYOLAB_COOKIE }}"
+          DISCORD_WEBHOOK_URL="${{ secrets.DISCORD_WEBHOOK }}"
+          AUTO_DAILY_CHECKIN=true
+          AUTO_REDEEM_CODE=true
+          AUTO_HOWL_CARD=true
+          AUTO_MIMO=true
+          LANGUAGE=en-us
+          EOF
+
+      - name: Run HoyoLab Auto Execution
+        run: npm start
