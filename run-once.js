@@ -102,6 +102,15 @@ const config = require("./config.js");
 		app.Logger.error("RunOnce", `Code Redeem failed: ${err.message || err}`);
 	}
 
+	// Run Traveling Mimo
+	app.Logger.info("RunOnce", "=== Starting Traveling Mimo ===");
+	try {
+		const Mimo = require("./crons/mimo/index.js");
+		await Mimo.code();
+	} catch (err) {
+		app.Logger.error("RunOnce", `Traveling Mimo failed: ${err.message || err}`);
+	}
+
 	const end = process.hrtime.bigint();
 	const duration = Number(end - start) / 1e9;
 	app.Logger.info("RunOnce", `All tasks completed in ${duration.toFixed(2)}s`);

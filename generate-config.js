@@ -82,6 +82,7 @@ const config = {
           cookie: cookie,
           redeemCode: true,
           dailiesCheck: true,
+          mimo: { active: true, check: true },
           stamina: { check: false, threshold: 0, persistent: false },
           expedition: { check: false, persistent: false }
         }
@@ -96,6 +97,7 @@ const config = {
           cookie: cookie,
           redeemCode: true,
           dailiesCheck: true,
+          mimo: { active: true, check: true },
           stamina: { check: false, threshold: 0, persistent: false }
         }
       ]
